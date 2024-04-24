@@ -1,11 +1,22 @@
 const express = require('express')
+const exphbs = require('express-handlebars')
+const path = require('path')
 const app = express()
 const db = require('./db/connection')
 const bodyParser = require('body-parser')
 
 const PORT = 3000
 
+// bodyParser
 app.use(bodyParser.urlencoded({ extended: false }))
+
+// handlebars
+app.set('views', path.join(__dirname, 'views'))
+app.engine('.hbs', exphbs.engine({ extname: '.hbs', defaultLayout: 'main' }))
+app.set('view engine', '.hbs')
+
+// static folder
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.listen(PORT, () => {
   console.log(`O Express está rodando na porta ${PORT}`)
@@ -22,7 +33,7 @@ db.authenticate()
 
 // routes
 app.get('/', (req, res) => {
-  res.send('Está funcionando')
+  res.render('index')
 })
 
 // job routes
